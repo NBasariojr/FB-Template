@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "node server/server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "nodemon server/server.js",
     "client": "echo 'Frontend served statically'",
