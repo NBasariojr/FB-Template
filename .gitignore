@@ -1,0 +1,25 @@
+.vercel
+node_modules/
+Add-Content .gitignore @"
+
+# Sensitive files
+uploads/
+uploads/*
+uploads/**/*.json
+uploads/**/*.env
+uploads/**/creds*
+**/creds*.json
+**/credentials*.json
+**/*.cred
+**/*.credential
+**/secrets*.json
+
+# Environment and secrets
+.env
+.env.*
+*.env
+**/*.secret
+**/*.key
+**/config/production.json
+**/config/credentials.json
+"@

